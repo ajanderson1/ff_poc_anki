@@ -1,0 +1,194 @@
+<link rel="stylesheet" type="text/css" href="vocab_css.css">
+
+<div class="prettify-flashcard">
+  <div class="front">
+    <div class="headword">{{Word}}</div>
+    <div class="morpho">{{Morpho}}</div>
+    <div class="pron">{{Pronunciation}}</div>
+    <div class="audio">{{word_audio}}</div>
+  </div>
+</div>
+
+<div class="prettify-flashcard" style="margin-top: 1em;">
+  <div class="back">
+    <!-- Meaning section (French) -->
+    {{#meaning}}
+    <div class="section">
+      <h3>Principales traductions</h3>
+      <div class="block">{{meaning}}</div>
+    </div>
+    {{/meaning}}
+
+    <!-- Synonyms section -->
+    {{#Synonyms}}
+    <div class="section">
+      <h3>Synonymes</h3>
+      <div class="block">{{Synonyms}}</div>
+    </div>
+    {{/Synonyms}}
+
+    <!-- Antonyms section -->
+    {{#Antonyms}}
+    <div class="section">
+      <h3>Antonymes</h3>
+      <div class="block">{{Antonyms}}</div>
+    </div>
+    {{/Antonyms}}
+
+    <!-- Variations section -->
+    {{#Variations}}
+    <div class="section">
+      <h3>Variations</h3>
+      <div class="block">{{Variations}}</div>
+    </div>
+    {{/Variations}}
+
+    <!-- Confusables section -->
+    {{#Confusables}}
+    <div class="section">
+      <h3>Confusables</h3>
+      <div class="block">{{Confusables}}</div>
+    </div>
+    {{/Confusables}}
+
+    <!-- Word Family section -->
+    {{#Word_Family}}
+    <div class="section">
+      <h3>Famille de mots</h3>
+      <div class="block">{{Word_Family}}</div>
+    </div>
+    {{/Word_Family}}
+
+    <!-- Etymology section -->
+    {{#Etymology}}
+    <div class="section">
+      <h3>Étymologie</h3>
+      <div class="block">{{Etymology}}</div>
+    </div>
+    {{/Etymology}}
+
+    <!-- Collocations section (French only) -->
+    {{#collocation_1}}
+    <div class="section collocations">
+      <h3>Collocations</h3>
+      <div class="collocation-block">
+        <div class="collocation-text">{{collocation_1_audio}} {{collocation_1}}</div>
+      </div>
+    </div>
+    {{/collocation_1}}
+
+    {{#collocation_2}}
+    <div class="collocation-block">
+      <div class="collocation-text">{{collocation_2_audio}} {{collocation_2}}</div>
+    </div>
+    {{/collocation_2}}
+
+    {{#collocation_3}}
+    <div class="collocation-block">
+      <div class="collocation-text">{{collocation_3_audio}} {{collocation_3}}</div>
+    </div>
+    {{/collocation_3}}
+
+    {{#collocation_4}}
+    <div class="collocation-block">
+      <div class="collocation-text">{{collocation_4_audio}} {{collocation_4}}</div>
+    </div>
+    {{/collocation_4}}
+
+    {{#collocation_5}}
+    <div class="collocation-block">
+      <div class="collocation-text">{{collocation_5_audio}} {{collocation_5}}</div>
+    </div>
+    {{/collocation_5}}
+
+    <!-- Examples section (French only) -->
+    {{#example_usage_1}}
+    <div class="section examples">
+      <h3>Exemples</h3>
+      <div class="example-block">
+        {{example_usage_1_audio}}
+        <div class="example-text">{{example_usage_1}}</div>
+      </div>
+    </div>
+    {{/example_usage_1}}
+
+    {{#example_usage_2}}
+    <div class="example-block">
+      {{example_usage_2_audio}}
+      <div class="example-text">{{example_usage_2}}</div>
+    </div>
+    {{/example_usage_2}}
+
+    {{#example_usage_3}}
+    <div class="example-block">
+      {{example_usage_3_audio}}
+      <div class="example-text">{{example_usage_3}}</div>
+    </div>
+    {{/example_usage_3}}
+
+    <!-- WordReference link section -->
+    {{#wr_link}}
+    <div class="section wr-link">
+      <h3>WordReference</h3>
+      <div class="block"><a href="{{wr_link}}" target="_blank">Voir sur WordReference</a></div>
+    </div>
+    {{/wr_link}}
+
+  </div>
+</div>
+
+{{#Tags}}
+<div class="prettify-tags">{{clickable:Tags}}</div>
+{{/Tags}}
+
+<script>
+  // Make entire front card tappable for audio
+  document.querySelectorAll('.front').forEach(function(front) {
+    front.style.cursor = 'pointer';
+    front.addEventListener('click', function(e) {
+      if (e.target.closest('.replay-button, .soundLink, svg, a[onclick]')) return;
+      var audioEl = front.querySelector('.replay-button, .soundLink, a[onclick]');
+      if (audioEl) audioEl.click();
+    });
+  });
+
+  // Make entire blocks tappable for audio on mobile
+  document.querySelectorAll('.collocation-block, .example-block').forEach(function(block) {
+    block.style.cursor = 'pointer';
+    block.addEventListener('click', function(e) {
+      // Don't double-trigger if clicking directly on the audio button
+      if (e.target.closest('.replay-button, .soundLink, svg, a[onclick]')) return;
+      // Find Anki's audio element (replay-button, soundLink, or any anchor with onclick)
+      var audioEl = block.querySelector('.replay-button, .soundLink, a[onclick]');
+      if (audioEl) audioEl.click();
+    });
+  });
+
+  // Split hierarchical tags
+  var tagsContainerEl = document.querySelectorAll(".prettify-tags > *");
+  if (tagsContainerEl.length > 0) {
+    var tags = [];
+    tagsContainerEl.forEach((tagEl) => {
+      tagEl.classList.add("prettify-tag");
+      tags.push(tagEl.innerHTML);
+      tags.forEach((tag) => {
+        var childTag = tag.split("::").filter(Boolean);
+        tagEl.innerHTML = childTag[childTag.length - 1].trim();
+      });
+    });
+  } else {
+    tagsContainerEl = document.querySelector(".prettify-tags");
+    if (tagsContainerEl) {
+      var tags = tagsContainerEl.innerHTML.split(" ").filter(Boolean);
+      var html = "";
+      tags.forEach((tag) => {
+        var childTag = tag.split("::").filter(Boolean);
+        html +=
+          "<span class='prettify-tag'>" +
+          childTag[childTag.length - 1] +
+          "</span>";
+      });
+      tagsContainerEl.innerHTML = html;
+    }
+  }
+</script>

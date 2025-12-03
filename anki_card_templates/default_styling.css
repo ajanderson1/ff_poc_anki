@@ -1,0 +1,437 @@
+/* Prettify by @pranavdeshai: French Word Card
+
+Version: 0.1.3
+Readme: https://github.com/pranavdeshai/anki-prettify
+Links:
+- Reddit: https://www.reddit.com/user/Various_Breadfruit48
+- GitHub: https://github.com/pranavdeshai
+- Buy Me a Coffee: https://www.buymeacoffee.com/pranavdeshai
+- Ko-fi: https://ko-fi.com/pranavdeshai
+
+*/
+
+/* -------------------------------------------------- PREFERENCES */
+:root {
+  --card-max-width: 45em;
+  --card-text-align: left;
+  --font-size-regular: 16px;
+  --font-size-small: 14px;
+  --font-family: "Inter", -apple-system, system-ui, BlinkMacSystemFont, Segoe UI,
+    Roboto, Helvetica, Arial, sans-serif;
+  --img-width: 50%;
+  --img-brightness: 0.75;
+  --img-filter: none;
+}
+
+/* -------------------------------------------------- COLORS */
+.card {
+  /* Light theme */
+  background-color: #f1f5f9;
+  --text-fg: #1e293b;
+  --text-fg-faint: #64748b;
+  --text-bg-selected: #e2e8f0;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-box-shadow: #0f172a0f;
+  --divider: #e2e8f0;
+  --tag-fg: #475569;
+  --tag-bg: #e2e8f0;
+  --tag-fg-active: #1e293b;
+  --tag-bg-active: #cbd5e1;
+  --tag-border: transparent;
+  --cloze-fg: #3b82f6;
+  --cloze-bg: transparent;
+  --link-fg: #2563eb;
+  --link-bg: transparent;
+  --link-fg-active: #1d4ed8;
+  --link-bg-active: transparent;
+  --bold-fg: var(--text-fg);
+  --italic-fg: var(--text-fg);
+  --bold-italic-fg: var(--text-fg);
+  --underline-fg: var(--text-fg);
+}
+
+.card.night_mode {
+  /* Dark theme */
+  background-color: #1a1a1a;
+  --text-fg: #ffffff;
+  --text-fg-faint: #b3b3b3;
+  --text-bg-selected: #404040;
+  --card-bg: #2d2d2d;
+  --card-border: #404040;
+  --card-box-shadow: #0000003f;
+  --divider: #404040;
+  --tag-fg: #cccccc;
+  --tag-bg: #555555;
+  --tag-fg-active: #ffffff;
+  --tag-bg-active: #666666;
+  --tag-border: transparent;
+  --cloze-fg: #66b3ff;
+  --cloze-bg: transparent;
+  --link-fg: #66b3ff;
+  --link-bg: transparent;
+  --link-fg-active: #80c4ff;
+  --link-bg-active: transparent;
+  --bold-fg: var(--text-fg);
+  --italic-fg: var(--text-fg);
+  --bold-italic-fg: var(--text-fg);
+  --underline-fg: var(--text-fg);
+}
+
+/* -------------------------------------------------- BACKGROUND */
+.card {
+  cursor: default;
+  padding: 0.5em 0;
+}
+html:not(.mobile) .card {
+  padding: 0.5em;
+}
+.card::-webkit-scrollbar {
+  display: none;
+}
+
+/* -------------------------------------------------- FLASHCARD */
+.prettify-flashcard {
+  background-color: var(--card-bg);
+  border-radius: 1em;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-box-shadow) 0px 7px 14px 0px, var(--card-box-shadow) 0px 3px 6px 0px;
+  color: var(--text-fg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-regular);
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: var(--card-max-width);
+  text-align: var(--card-text-align);
+  word-wrap: break-word;
+  overflow: hidden;
+}
+.prettify-flashcard ::selection {
+  background-color: var(--text-bg-selected);
+}
+
+/* -------------------------------------------------- FIELDS */
+.prettify-field {
+  margin: 2em;
+}
+.mobile .prettify-field {
+  margin: 1em;
+}
+
+.prettify-field--back {
+  color: var(--text-fg-faint);
+  font-size: var(--font-size-small);
+}
+
+/* -------------------------------------------------- FRONT SIDE STYLING */
+.front {
+  padding: 2em;
+  border-radius: 1em;
+  background-color: var(--card-bg);
+}
+.mobile .front {
+  padding: 1em;
+}
+
+.headword {
+  font-size: 2.5em;
+  font-weight: 700;
+  margin: 0 0 0.3em 0;
+  color: var(--text-fg);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.morpho {
+  color: var(--text-fg-faint);
+  margin-bottom: 0.5em;
+  font-size: 0.9em;
+  font-weight: 500;
+  font-family: var(--font-family);
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pron {
+  color: var(--text-fg-faint);
+  margin-bottom: 1em;
+  font-size: 0.9em;
+  font-weight: 400;
+  font-style: italic;
+  font-family: var(--font-family);
+  display: block;
+}
+
+/* Hide empty pronunciation divs */
+.pron:empty {
+  display: none !important;
+}
+
+/* Audio styling - simple, no special formatting */
+.audio {
+  margin: 0.5em 0;
+}
+
+/* -------------------------------------------------- DIVIDER */
+hr#answer {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--divider);
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+/* -------------------------------------------------- BACK SIDE STYLING */
+.back {
+  padding: 2em;
+  border-radius: 1em;
+  background-color: var(--card-bg);
+}
+.mobile .back {
+  padding: 1em;
+}
+
+/* Section headers */
+h3 {
+  font-size: 1.1em;
+  margin: 1.5em 0 0.75em 0;
+  color: var(--text-fg);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 1em;
+}
+
+/* First section header has no top margin */
+.back h3:first-of-type {
+  margin-top: 0;
+}
+
+h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 1em;
+  background-color: var(--cloze-fg);
+  border-radius: 2px;
+}
+
+/* Section-specific header colors */
+.examples h3::before { background-color: #10b981; }
+.memory-hook h3::before { background-color: #f59e0b; }
+.collocations h3::before { background-color: #8b5cf6; }
+.wr-link h3::before { background-color: #06b6d4; }
+
+/* Content blocks */
+.block {
+  white-space: pre-wrap;
+  background-color: var(--tag-bg);
+  padding: 1em 1.25em;
+  border-radius: 0.5em;
+  border-left: 3px solid var(--cloze-fg);
+  margin-bottom: 1em;
+  font-size: var(--font-size-regular);
+  line-height: 1.6;
+}
+
+/* Memory hook special styling */
+.memory-hook .block {
+  background-color: #fef3c7;
+  border-left-color: #f59e0b;
+}
+
+/* Collocation blocks */
+.collocation-block {
+  background-color: #faf5ff;
+  padding: 1em 1.25em;
+  border-radius: 0.5em;
+  border-left: 3px solid #8b5cf6;
+  margin-bottom: 1em;
+  font-size: var(--font-size-regular);
+  line-height: 1.6;
+}
+
+.collocation-text {
+  font-weight: 500;
+  margin-bottom: 0.5em;
+  color: var(--text-fg);
+}
+
+.collocation-audio {
+  margin: 0.25em 0;
+}
+
+.collocation-translation {
+  color: var(--text-fg-faint);
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+/* Example blocks */
+.example-block {
+  background-color: #f0fdf4;
+  padding: 1em 1.25em;
+  border-radius: 0.5em;
+  border-left: 3px solid #10b981;
+  margin-bottom: 1em;
+  font-size: var(--font-size-regular);
+  line-height: 1.6;
+}
+
+.example-text {
+  font-weight: 500;
+  margin-bottom: 0.5em;
+  color: var(--text-fg);
+}
+
+.example-audio {
+  margin: 0.25em 0;
+}
+
+.example-translation {
+  color: var(--text-fg-faint);
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+/* Dark mode styling */
+.card.night_mode .collocation-block {
+  background-color: #2e1065;
+  border-left-color: #a78bfa;
+}
+
+.card.night_mode .example-block {
+  background-color: #064e3b;
+  border-left-color: #34d399;
+}
+
+.card.night_mode .memory-hook .block {
+  background-color: #451a03;
+  border-left-color: #fbbf24;
+}
+
+/* -------------------------------------------------- TAGS */
+.prettify-tags {
+  margin: 2em;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: var(--font-size-small);
+}
+.mobile .prettify-tags {
+  margin: 1em;
+}
+
+.prettify-tag {
+  all: initial;
+  background-color: var(--tag-bg);
+  border-radius: 0.5em;
+  color: var(--tag-fg);
+  display: inline;
+  font-size: var(--font-size-small);
+  font-family: var(--font-family);
+  margin: 0 0.5em 0.5em 0;
+  padding: 0.25em 0.75em;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+/* -------------------------------------------------- CLOZE */
+.cloze {
+  background-color: var(--cloze-bg);
+  color: var(--cloze-fg);
+}
+
+/* -------------------------------------------------- HYPERLINKS */
+a, a:visited {
+  text-decoration: none;
+  color: var(--link-fg);
+}
+a:hover, a:active {
+  text-decoration: underline;
+  color: var(--link-fg-active);
+}
+
+/* -------------------------------------------------- MOBILE OPTIMIZATIONS */
+.mobile .prettify-flashcard {
+  font-size: 14px;
+  max-width: 100%;
+  margin: 0;
+  border-radius: 0.75em;
+}
+
+.mobile .headword {
+  font-size: 2em;
+  line-height: 1.1;
+}
+
+.mobile .morpho {
+  font-size: 0.8em;
+}
+
+.mobile .pron {
+  font-size: 0.85em;
+}
+
+.mobile h3 {
+  font-size: 1em;
+  margin: 1.2em 0 0.6em 0;
+}
+
+.mobile .block,
+.mobile .collocation-block,
+.mobile .example-block {
+  font-size: 0.9em;
+  padding: 0.8em 1em;
+  margin-bottom: 0.8em;
+}
+
+.mobile .collocation-text,
+.mobile .example-text {
+  font-size: 0.95em;
+}
+
+.mobile .collocation-translation,
+.mobile .example-translation {
+  font-size: 0.85em;
+}
+
+/* Visual feedback when tapping audio blocks */
+.front:active,
+.collocation-block:active,
+.example-block:active {
+  opacity: 0.7;
+  transition: opacity 0.1s ease;
+}
+
+.mobile .prettify-tag {
+  font-size: 0.8em;
+  padding: 0.2em 0.6em;
+  margin: 0 0.3em 0.3em 0;
+}
+
+/* -------------------------------------------------- FORMATTING */
+b {
+  color: var(--bold-fg);
+}
+
+i {
+  color: var(--italic-fg);
+}
+
+b > i,
+i > b {
+  color: var(--bold-italic-fg);
+}
+
+u {
+  color: var(--underline-fg);
+}
+
+pre {
+  white-space: normal;
+}

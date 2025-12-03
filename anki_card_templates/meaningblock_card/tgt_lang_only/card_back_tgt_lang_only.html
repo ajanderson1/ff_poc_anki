@@ -1,0 +1,111 @@
+<link rel="stylesheet" type="text/css" href="phrase_css.css">
+
+<div class="prettify-flashcard">
+  <div class="front">
+    <div class="phrase">{{phrase}}</div>
+    <div class="pron">{{pronunciation}}</div>
+    <div class="audio">{{phrase_audio}}</div>
+  </div>
+</div>
+
+<div class="prettify-flashcard" style="margin-top: 1em;">
+  <div class="back">
+    <!-- Meaning section (French) -->
+    {{#meaning}}
+    <div class="section">
+      <h3>Sens</h3>
+      <div class="block">{{meaning}}</div>
+    </div>
+    {{/meaning}}
+
+    <!-- Usage notes section (French) -->
+    {{#usage_notes}}
+    <div class="section">
+      <h3>Notes d'utilisation</h3>
+      <div class="block">{{usage_notes}}</div>
+    </div>
+    {{/usage_notes}}
+
+    <!-- Examples section (French only) -->
+    {{#example_usage_1}}
+    <div class="section examples">
+      <h3>Exemples</h3>
+      <div class="example-block">
+        {{example_usage_1_audio}}
+        <div class="example-text">{{example_usage_1}}</div>
+      </div>
+    </div>
+    {{/example_usage_1}}
+
+    {{#example_usage_2}}
+    <div class="example-block">
+      {{example_usage_2_audio}}
+      <div class="example-text">{{example_usage_2}}</div>
+    </div>
+    {{/example_usage_2}}
+
+    {{#example_usage_3}}
+    <div class="example-block">
+      {{example_usage_3_audio}}
+      <div class="example-text">{{example_usage_3}}</div>
+    </div>
+    {{/example_usage_3}}
+
+  </div>
+</div>
+
+{{#Tags}}
+<div class="prettify-tags">{{clickable:Tags}}</div>
+{{/Tags}}
+
+<script>
+  // Make entire front card tappable for audio
+  document.querySelectorAll('.front').forEach(function(front) {
+    front.style.cursor = 'pointer';
+    front.addEventListener('click', function(e) {
+      if (e.target.closest('.replay-button, .soundLink, svg, a[onclick]')) return;
+      var audioEl = front.querySelector('.replay-button, .soundLink, a[onclick]');
+      if (audioEl) audioEl.click();
+    });
+  });
+
+  // Make entire blocks tappable for audio on mobile
+  document.querySelectorAll('.collocation-block, .example-block').forEach(function(block) {
+    block.style.cursor = 'pointer';
+    block.addEventListener('click', function(e) {
+      // Don't double-trigger if clicking directly on the audio button
+      if (e.target.closest('.replay-button, .soundLink, svg, a[onclick]')) return;
+      // Find Anki's audio element (replay-button, soundLink, or any anchor with onclick)
+      var audioEl = block.querySelector('.replay-button, .soundLink, a[onclick]');
+      if (audioEl) audioEl.click();
+    });
+  });
+
+  // Split hierarchical tags
+  var tagsContainerEl = document.querySelectorAll(".prettify-tags > *");
+  if (tagsContainerEl.length > 0) {
+    var tags = [];
+    tagsContainerEl.forEach((tagEl) => {
+      tagEl.classList.add("prettify-tag");
+      tags.push(tagEl.innerHTML);
+      tags.forEach((tag) => {
+        var childTag = tag.split("::").filter(Boolean);
+        tagEl.innerHTML = childTag[childTag.length - 1].trim();
+      });
+    });
+  } else {
+    tagsContainerEl = document.querySelector(".prettify-tags");
+    if (tagsContainerEl) {
+      var tags = tagsContainerEl.innerHTML.split(" ").filter(Boolean);
+      var html = "";
+      tags.forEach((tag) => {
+        var childTag = tag.split("::").filter(Boolean);
+        html +=
+          "<span class='prettify-tag'>" +
+          childTag[childTag.length - 1] +
+          "</span>";
+      });
+      tagsContainerEl.innerHTML = html;
+    }
+  }
+</script>

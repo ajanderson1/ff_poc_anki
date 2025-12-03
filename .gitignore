@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+/tmp/
+
+# Environment and secrets
+.env
+.env.local
+
+# Claude Code local settings (keep commands and guides)
+.claude/settings.local.json
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]

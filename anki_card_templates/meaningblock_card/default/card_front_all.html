@@ -1,0 +1,21 @@
+<link rel="stylesheet" type="text/css" href="phrase_css.css">
+
+<div class="prettify-flashcard">
+  <div class="front">
+    <div class="phrase">{{phrase}}</div>
+    <div class="pron">{{pronunciation}}</div>
+    <div class="audio">{{phrase_audio}}</div>
+  </div>
+</div>
+
+<script>
+  // Make entire front card tappable for audio
+  document.querySelectorAll('.front').forEach(function(front) {
+    front.style.cursor = 'pointer';
+    front.addEventListener('click', function(e) {
+      if (e.target.closest('.replay-button, .soundLink, svg, a[onclick]')) return;
+      var audioEl = front.querySelector('.replay-button, .soundLink, a[onclick]');
+      if (audioEl) audioEl.click();
+    });
+  });
+</script>
