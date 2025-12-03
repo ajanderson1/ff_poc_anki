@@ -23,3 +23,6 @@
 # Python
 __pycache__/
 *.py[cod]
+_elevenlabs_flowreader/CLAUDE.md
+_elevenlabs_flowreader/scratchpads
+_elevenlabs_flowreader/.serena
