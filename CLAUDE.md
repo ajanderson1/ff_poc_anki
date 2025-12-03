@@ -28,6 +28,7 @@ macOS Quick Action (Services menu)
 ### Key Components
 
 - **ff_flashcard.sh**: Unified entry point. Accepts `--lang=XX` parameter, loads language config, validates Anki/AnkiConnect, routes to appropriate slash command
+- **ff_batch.sh**: Batch processing script for creating multiple flashcards from a file
 - **config/languages/*.conf**: Language-specific configuration (voice ID, deck prefix, reference source)
 - **quickactions/ff_{lang}.applescript**: macOS Automator Quick Action wrappers per language
 - **.claude/commands/ff_vocab_{lang}.md**: Language-specific vocabulary slash commands
@@ -35,9 +36,8 @@ macOS Quick Action (Services menu)
 - **.claude/guides/tagging-guide.md**: Comprehensive tagging taxonomy (shared across languages)
 - **.claude/guides/vocab-field-guide.md**: Field structure documentation for vocabulary cards
 - **.claude/guides/audio-generation-guide.md**: TTS generation instructions
-- **templates/vocab_card/**: Anki card HTML/CSS templates for vocabulary cards
-- **templates/meaningblock_card/**: Anki card HTML/CSS templates for phrase cards
-- **deprecated/**: Old single-language scripts
+- **anki_card_templates/vocab_card/**: Anki card HTML/CSS templates for vocabulary cards
+- **anki_card_templates/meaningblock_card/**: Anki card HTML/CSS templates for phrase cards
 
 ## Commands
 
@@ -54,6 +54,18 @@ macOS Quick Action (Services menu)
 
 # Swedish phrase card (multi-word)
 ./ff_flashcard.sh --lang=sv "för övrigt"
+```
+
+### Batch processing
+```bash
+# Create multiple flashcards from a file (one word/phrase per line)
+./ff_batch.sh --lang=fr words.txt
+
+# With custom delay between cards (default: 2 seconds)
+./ff_batch.sh --lang=sv --delay=5 swedish_phrases.txt
+
+# Dry run to preview what would be processed
+./ff_batch.sh --lang=fr --dry-run vocabulary.txt
 ```
 
 ### Via macOS Quick Action
